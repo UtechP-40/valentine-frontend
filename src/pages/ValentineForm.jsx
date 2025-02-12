@@ -39,7 +39,7 @@ export default function ValentineForm() {
       formData.append("firstMet", firstMet); // Include First Met Date
       formData.append("image", image);
 
-      const response = await axios.post("http://localhost:80/save-valentine", formData, {
+      const response = await axios.post("https://valentine-backend-phi.vercel.app/save-valentine", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -163,4 +163,3 @@ export default function ValentineForm() {
     </div>
   );
 }
-  
