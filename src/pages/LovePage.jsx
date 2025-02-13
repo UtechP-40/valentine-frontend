@@ -41,7 +41,7 @@ const LovePage = () => {
   useEffect(() => {
     const fetchLoveData = async () => {
       try {
-        const response = await axios.get(`https://valentine-backend-phi.vercel.app/get-love/${id}`);
+        const response = await axios.get(`https://3p36t0gw-80.inc1.devtunnels.ms/get-love/${id}`);
         setLoveData(response.data.data);
       } catch (err) {
         setError("Failed to fetch data or invalid response format");
