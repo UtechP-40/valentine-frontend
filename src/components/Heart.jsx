@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { Float } from "@react-three/drei";
-
+import { Canvas } from "@react-three/fiber";
 function Heart() {
   const heartShape = new THREE.Shape();
 
@@ -33,6 +33,7 @@ function Heart() {
   });
 
   return (
+    <Canvas className="fixed top-0 left-0 w-full h-full z-0">
     <Float speed={1.5} rotationIntensity={0.6} floatIntensity={1.5}>
       <mesh
         geometry={geometry}
@@ -41,6 +42,7 @@ function Heart() {
         position={[0, -1, 0]} // Centered heart
       />
     </Float>
+    </Canvas>
   );
 }
 

@@ -39,12 +39,12 @@ export default function ValentineForm() {
       formData.append("firstMet", firstMet); // Include First Met Date
       formData.append("image", image);
 // url = https://valentine-backend-phi.vercel.app
-      const response = await axios.post("https://3p36t0gw-80.inc1.devtunnels.ms/save-valentine", formData, {
+      const response = await axios.post("https://valentine-backend-l9x8.onrender.com/save-valentine", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
       // Redirect user to their unique love page
-      navigate(`/${response.data.data.partnerName}/${response.data.data._id}`);
+      navigate(`/valentine/${response.data.data.partnerName}/${response.data.data._id}`);
     } catch (error) {
       console.error("Error submitting form:", error);
     }

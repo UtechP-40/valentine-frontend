@@ -1,22 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
 import Typewriter from "typewriter-effect";
 import { Mail, CalendarHeart, Menu, X } from "lucide-react"; // Import icons
-
+import SendLoveLetter from "../components/SendLoveLetter";
+import ScheduleDate from "../components/ScheduleDate";
+import { useLove } from "../context/love.context";
+import LoadingScreen from "../components/Loading";
 const LovePage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   
-  const [loveData, setLoveData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  // const [loveData, setLoveData] = useState(null);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
+  const { loveData, loading, error,fetchLoveData } = useLove();
   const [loveDuration, setLoveDuration] = useState("");
   const [quote, setQuote] = useState("");
   const [message, setMessage] = useState("");
   const [menuOpen, setMenuOpen] = useState(false); // Toggle state for menu
+  const [showLetterForm, setShowLetterForm] = useState(false);
+  const [showDateForm, setShowDateForm] = useState(false);
 
+
+
+
+  const menuRef = useRef(null);
   // Romantic Quotes Array
   const romanticQuotes = [
     "Love is not about how many days, months, or years you've been together. Love is about how much you love each other every single day.",
@@ -39,18 +49,18 @@ const LovePage = () => {
 
   // Fetch Love Data
   useEffect(() => {
-    const fetchLoveData = async () => {
-      try {
-        const response = await axios.get(`https://3p36t0gw-80.inc1.devtunnels.ms/get-love/${id}`);
-        setLoveData(response.data.data);
-      } catch (err) {
-        setError("Failed to fetch data or invalid response format");
-      } finally {
-        setLoading(false);
-      }
-    };
+    // const fetchLoveData = async () => {
+    //   try {
+    //     const response = await axios.get(`https://3p36t0gw-80.inc1.devtunnels.ms/get-love/${id}`);
+    //     setLoveData(response.data.data);
+    //   } catch (err) {
+    //     setError("Failed to fetch data or invalid response format");
+    //   } finally {
+    //     setLoading(false);
+    //   }
+    // };
 
-    fetchLoveData();
+    fetchLoveData(id);
   }, [id]);
 
   // Update Love Duration
@@ -93,7 +103,20 @@ const LovePage = () => {
     return () => clearInterval(interval);
   }, []);
 
-  if (loading) return <p className="text-center text-gray-600">Loading...</p>;
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+
+
+  if (loading) return <p className="text-center text-gray-600"><LoadingScreen /></p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
@@ -107,19 +130,12 @@ const LovePage = () => {
         {menuOpen ? <X size={28} /> : <Menu size={28} />}
       </button>
 
-      {/* Floating Menu */}
       {menuOpen && (
-        <div className="fixed top-16 right-5 bg-white shadow-lg rounded-lg p-4 flex flex-col gap-3 z-50">
-          <button
-            onClick={() => navigate(`/letters/${id}`)}
-            className="flex items-center gap-2 text-red-500 hover:text-red-600"
-          >
+        <div ref={menuRef} className="fixed top-16 right-5 bg-white shadow-lg rounded-lg p-4 flex flex-col gap-3 z-50">
+          <button onClick={() => navigate(`/letters/${id}`)} className="flex items-center gap-2 text-red-500 hover:text-red-600">
             <Mail size={20} /> Check Love Letters
           </button>
-          <button
-            onClick={() => navigate(`/dates/${id}`)}
-            className="flex items-center gap-2 text-red-500 hover:text-red-600"
-          >
+          <button onClick={() => navigate(`/dates/${id}`)} className="flex items-center gap-2 text-red-500 hover:text-red-600">
             <CalendarHeart size={20} /> Check Scheduled Dates
           </button>
         </div>
@@ -170,6 +186,21 @@ const LovePage = () => {
       <p className="mt-6 text-white text-lg italic text-center max-w-xl bg-white/20 px-4 py-3 rounded-lg shadow-md">
         {quote}
       </p>
+      {showLetterForm && <SendLoveLetter onClose={() => setShowLetterForm(false)} loveEntryId={id} />}
+{showDateForm && <ScheduleDate onClose={() => setShowDateForm(false)}  />}
+
+{/* Buttons to open overlays */}
+
+
+      {/* 🎁 Special Call to Action */}
+        <div className="mt-10 flex flex-col items-center space-y-4">
+        <button onClick={() => setShowLetterForm(true)} className="px-6 py-3 bg-white text-red-500 font-semibold rounded-full text-xl shadow-lg transition-transform transform hover:scale-105">
+  Send a Love Letter 💌
+</button>
+<button onClick={() => setShowDateForm(true)} className="px-6 py-3 bg-red-600 text-white font-semibold rounded-full text-xl shadow-lg transition-transform transform hover:scale-105">
+  Plan a Romantic Date 💕
+</button>
+      </div>
     </div>
   );
 };
