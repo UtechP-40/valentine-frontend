@@ -83,32 +83,18 @@ const LoveLetters = () => {
       )}
 
       {/* Right Panel - Letter Preview */}
-      <div className="flex-1 p-8 flex items-center justify-center">
-        {selectedLetter ? (
-          // <div className="bg-white/70 backdrop-blur-xl p-8 rounded-2xl shadow-xl max-w-lg w-full border border-red-300 animate-fadeIn">
-          //   <h2 className="text-3xl font-bold text-red-600">{selectedLetter.title}</h2>
-          //   <p className="text-gray-600 mt-2 text-lg font-medium">
-          //     💕 From: {selectedLetter.from}
-          //   </p>
-          //   <hr className="my-4 border-red-400" />
-          //   <p className="text-gray-800 text-lg leading-relaxed whitespace-pre-wrap">
-          //     {selectedLetter.message}
-          //   </p>
-          // </div>
-          <div className="max-w-lg w-full h-[75vh] overflow-y-auto scrollbar-thin scrollbar-thumb-red-400 scrollbar-track-transparent scrollbar-thumb-rounded-full">
-  <LoveLetterPreview selectedLetter={selectedLetter} />
-</div>
+      {/* Right Panel - Letter Preview */}
+      <div className="flex-1 p-8 flex flex-col items-center justify-start h-screen overflow-y-auto scrollbar-thin scrollbar-thumb-pink-500 scrollbar-track-gray-200 hover:scrollbar-thumb-red-500 transition-all duration-300">
 
-        ) : (
-          <div className="flex flex-col gap-4 w-full max-w-lg">
-            <Skeleton className="h-10 w-2/3" />
-            {/* <Skeleton className="h-6 w-1/3" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-full" /> */}
-          </div>
-        )}
-      </div>
+  {selectedLetter ? (
+    <LoveLetterPreview selectedLetter={selectedLetter} />
+  ) : (
+    <div className="flex flex-col gap-4 w-full max-w-lg">
+      <Skeleton className="h-10 w-2/3" />
+    </div>
+  )}
+</div>
+      
     </div>
   );
 };

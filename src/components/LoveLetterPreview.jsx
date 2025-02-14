@@ -5,7 +5,7 @@ const LoveLetterPreview = ({ selectedLetter }) => {
   if (!selectedLetter) return null;
 
   return (
-    <div className="relative flex justify-center items-center p-8">
+    <div className="relative flex justify-center items-center p-8 max-32">
       {/* Confetti Effect for Romantic Touch */}
       <Confetti numberOfPieces={40} recycle={false} />
 
