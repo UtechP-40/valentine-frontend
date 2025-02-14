@@ -51,7 +51,8 @@ export default function ValentineForm() {
   };
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen max-h-screen overflow-y-auto bg-gradient-to-r from-pink-600 to-red-500 p-6">
+    <div className="relative flex flex-col items-center align-center justify-center min-h-screen bg-gradient-to-r from-pink-600 to-red-500 p-6 overflow-auto h-screen scrollbar-thin scrollbar-thumb-pink-500 scrollbar-track-gray-200">
+
       
       {/* 🎇 3D Animated Background */}
       <Canvas className="fixed top-0 left-0 w-full h-full z-0">
@@ -61,10 +62,10 @@ export default function ValentineForm() {
         <Stars radius={100} depth={50} count={2000} factor={4} fade />
         <Heart />
       </Canvas>
-  
+
       {/* 💖 Main Card */}
       <motion.div
-        className="relative z-10 bg-white shadow-2xl rounded-3xl p-10 max-w-lg w-full text-center opacity-95 backdrop-blur-lg overflow-y-auto max-h-[90vh] scrollbar-thin scrollbar-thumb-pink-500 scrollbar-track-gray-200 hover:scrollbar-thumb-red-500"
+        className="relative z-10 bg-white shadow-2xl rounded-3xl p-10 max-w-lg w-full text-center opacity-95 backdrop-blur-lg"
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1 }}
@@ -86,7 +87,7 @@ export default function ValentineForm() {
         >
           Create a personalized love page for your special one! 🌹
         </motion.p>
-  
+
         {/* 🎀 Form */}
         <motion.form 
           onSubmit={handleSubmit} 
@@ -103,7 +104,7 @@ export default function ValentineForm() {
             className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-lg"
             required
           />
-  
+
           <input
             type="text"
             placeholder="Partner's Name"
@@ -112,7 +113,7 @@ export default function ValentineForm() {
             className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-lg"
             required
           />
-  
+
           <textarea
             placeholder="Write your love message... 💌"
             value={message}
@@ -121,7 +122,7 @@ export default function ValentineForm() {
             rows="3"
             required
           ></textarea>
-  
+
           {/* 📅 First Met Date Field */}
           <input
             type="date"
@@ -130,7 +131,7 @@ export default function ValentineForm() {
             className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-lg"
             required
           />
-  
+
           <motion.label 
             className="cursor-pointer bg-pink-500 text-white py-3 px-6 rounded-lg hover:bg-pink-600 text-lg font-semibold shadow-lg"
             whileHover={{ scale: 1.05 }}
@@ -138,7 +139,7 @@ export default function ValentineForm() {
             Upload Image
             <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} required />
           </motion.label>
-  
+
           {preview && (
             <motion.img 
               src={preview} 
@@ -149,7 +150,7 @@ export default function ValentineForm() {
               transition={{ duration: 0.7 }}
             />
           )}
-  
+
           <motion.button
             type="submit"
             className="bg-red-500 text-white py-3 rounded-lg font-bold hover:bg-red-600 text-lg shadow-lg"
@@ -162,5 +163,4 @@ export default function ValentineForm() {
       </motion.div>
     </div>
   );
-  
 }
