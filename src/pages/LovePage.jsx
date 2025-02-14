@@ -3,13 +3,16 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
 import Typewriter from "typewriter-effect";
-import { Mail, CalendarHeart, Menu, X } from "lucide-react"; // Import icons
+import { Mail, CalendarHeart, Menu, X, Share, LogOut } from "lucide-react"; // Import icons
 import SendLoveLetter from "../components/SendLoveLetter";
 import ScheduleDate from "../components/ScheduleDate";
 import { useLove } from "../context/love.context";
 import LoadingScreen from "../components/Loading";
+import Error from "../components/Error"
+import HeartBroken from "../components/HeartBroken";
+import ShareModal from "../components/ShareModal";
 const LovePage = () => {
-  const { id } = useParams();
+  const { id,name } = useParams();
   const navigate = useNavigate();
   
   // const [loveData, setLoveData] = useState(null);
@@ -22,7 +25,7 @@ const LovePage = () => {
   const [menuOpen, setMenuOpen] = useState(false); // Toggle state for menu
   const [showLetterForm, setShowLetterForm] = useState(false);
   const [showDateForm, setShowDateForm] = useState(false);
-
+  const [showShareModal, setShowShareModal] = useState(false);
 
 
 
@@ -62,7 +65,13 @@ const LovePage = () => {
 
     fetchLoveData(id);
   }, [id]);
-
+  useEffect(() => {
+    if (id && name) {
+      localStorage.setItem("loveId", id);
+      localStorage.setItem("loveName", name);
+    }
+  }, [id, loveData]);
+  
   // Update Love Duration
   useEffect(() => {
     if (loveData?.firstMet) {
@@ -114,10 +123,38 @@ const LovePage = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const handleShare = () => {
+    const lovePageUrl = window.location.href;
+    navigator.clipboard.writeText(lovePageUrl);
+    alert("Love Page URL copied to clipboard! Share it with your partner 💖");
+  };
 
+  const [showUnbreakableModal, setShowUnbreakableModal] = useState(false);
 
-  if (loading) return <p className="text-center text-gray-600"><LoadingScreen /></p>;
-  if (error) return <p className="text-center text-red-500">{error}</p>;
+const handleBreakUp = async () => {
+  const confirmBreakup = window.confirm("Are you sure you want to break up? This action cannot be undone.");
+  if (confirmBreakup) {
+    try {
+      await axios.delete(`https://your-api.com/delete-love/${id}`);
+      alert("Love entry deleted successfully 💔");
+      navigate("/");
+    } catch (error) {
+      // If deletion fails, show the "Unbreakable Bond" modal
+      setShowUnbreakableModal(true);
+    }
+  }
+};
+
+    // const confirmBreakup = window.confirm("Are you sure you want to break up?");
+    // if (confirmBreakup) {
+    //   localStorage.removeItem("loveId");
+    //   localStorage.removeItem("loveName");
+    //   navigate("/");
+    // }
+  // };
+
+  if (loading) return <LoadingScreen />;
+  if (error) return <Error/>;
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-pink-600 to-red-500 p-6">
@@ -138,8 +175,65 @@ const LovePage = () => {
           <button onClick={() => navigate(`/dates/${id}`)} className="flex items-center gap-2 text-red-500 hover:text-red-600">
             <CalendarHeart size={20} /> Check Scheduled Dates
           </button>
+          <button onClick={() => setShowShareModal(true)} className="flex items-center gap-2 text-blue-500 hover:text-blue-600">
+            <Share size={20} /> Share Love Page
+          </button>
+          <button onClick={handleBreakUp} className="flex items-center gap-2 text-gray-700 hover:text-gray-900">
+             Break Up 💔
+          </button>
+          <button onClick={() => {
+            localStorage.removeItem("loveId");
+            localStorage.removeItem("loveName");
+            navigate("/")}} className="flex items-center gap-2 text-red-700 hover:text-red-900">
+            <LogOut size={20} /> Exit Love 🚪
+          </button>
         </div>
       )}
+
+{showUnbreakableModal && (
+  <div
+    className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50"
+    onClick={() => setShowUnbreakableModal(false)} // Close when clicking outside
+  >
+    <div
+      className="bg-white p-8 rounded-2xl shadow-2xl w-96 text-center relative animate-[wiggle_0.3s_ease-in-out] border-4 border-pink-500"
+      // Prevent close on modal click onClick={(e) => e.stopPropagation()} 
+    >
+      {/* Glowing Background Effect */}
+      <div className="absolute inset-0 bg-pink-400 blur-2xl opacity-30 rounded-2xl"></div>
+
+      <h2 className="text-3xl font-extrabold text-red-500 drop-shadow-lg">
+        Not Even God Can Break Your Bond! ❤️
+      </h2>
+      <p className="text-gray-700 mt-4 italic">
+        Your love is truly unbreakable. The universe has spoken! 💫
+      </p>
+
+      {/* Cosmic Animated Background */}
+      <div className="absolute inset-0 overflow-hidden rounded-2xl">
+        <div className="absolute -top-10 -left-10 w-40 h-40 bg-pink-300 rounded-full opacity-40 animate-pulse"></div>
+        <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-red-400 rounded-full opacity-30 animate-pulse"></div>
+      </div>
+
+      {/* Action Button */}
+      <button
+  onClick={() => {
+    setShowUnbreakableModal(false);
+    console.log("Modal Closed! New state:", showUnbreakableModal);
+  }}
+  className="mt-6 px-6 py-3 bg-gradient-to-r from-pink-500 to-red-500 text-white font-bold rounded-lg shadow-md 
+  transition-all duration-300 ease-in-out transform hover:scale-110 hover:shadow-lg hover:shadow-pink-500/50 
+  cursor-pointer"
+>
+  Accept Your Fate 💖
+</button>
+
+
+
+    </div>
+  </div>
+)}
+
 
       {/* ❤️ Love Greeting */}
       <h1 className="text-6xl font-extrabold text-white drop-shadow-lg text-center">
@@ -174,7 +268,7 @@ const LovePage = () => {
           />
         </div>
       </div>
-
+      {showShareModal && <ShareModal shareUrl={window.location.href} onClose={() => setShowShareModal(false)} isOpen={showShareModal} />}
       {/* ✨ Animated Hearts */}
       <div className="mt-10 flex gap-6">
         <span className="text-6xl animate-bounce text-white">❤️</span>

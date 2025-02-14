@@ -44,4 +44,21 @@
   .animate-fadeIn {
     animation: fadeIn 0.6s ease-in-out;
   }
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(239, 68, 68, 0.6); /* Red-400 */
+    border-radius: 10px;
+    transition: background 0.3s;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(220, 38, 38, 1); /* Red-500 */
+  }
   

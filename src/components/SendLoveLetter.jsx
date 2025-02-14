@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { X, Heart } from "lucide-react";
 
-const API_BASE_URL = "https://3p36t0gw-80.inc1.devtunnels.ms";
+const API_BASE_URL = "https://valentine-backend-l9x8.onrender.com";
 
 const SendLoveLetter = ({ onClose, loveEntryId }) => {
   // State for form data
@@ -36,6 +36,7 @@ const SendLoveLetter = ({ onClose, loveEntryId }) => {
       setSuccess(true);
       setFormData({ from: "", to: "", title: "", message: "" });
     } catch (err) {
+      console.error(err);
       setError(err.response?.data?.message || "Failed to send love letter");
     } finally {
       setLoading(false);

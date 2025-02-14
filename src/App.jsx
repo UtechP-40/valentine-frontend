@@ -1,26 +1,35 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import React, { useEffect } from "react";
+import { BrowserRouter as Router, Route, Routes, useNavigate } from "react-router-dom";
 import ValentineForm from "./pages/ValentineForm";
-import LovePage from "./pages/LovePage"; // Page with /:name/:id route
-import NotFound from "./pages/NotFound"; // 404 page
-import { Toaster } from 'react-hot-toast';
+import LovePage from "./pages/LovePage";
+import NotFound from "./pages/NotFound";
 import LoveLetters from "./pages/LoveLetters";
+import { Toaster } from 'react-hot-toast';
+
 function App() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Retrieve stored values
+    const savedId = localStorage.getItem("loveId");
+    const savedName = localStorage.getItem("loveName");
+
+    // Redirect if both exist
+    if (savedId && savedName) {
+      navigate(`/valentine/${savedName}/${savedId}`);
+    }
+  }, []);
+
   return (
     <div>
       <Routes>
-        {/* Default form page */}
         <Route path="/" element={<ValentineForm />} />
         <Route path="/letters/:id" element={<LoveLetters />} />
-
-        {/* Two-step dynamic route: /:name/:id */}
         <Route path="/valentine/:name/:id" element={<LovePage />} />
-        
-        {/* 404 Page */}
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Toaster />
-      </div>
+    </div>
   );
 }
 
